@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>StarBlaze</title>
+
+  <!-- Google Fonts: Retro arcade-style font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <!-- External stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- HEADER SECTION: Game Title + Team Credits -->
+  <header>
+    <hr>
+    <h1>StarBlaze</h1>
+    <hr>
+    <h2>A Retro Space War Game</h2>
+    <hr>
+    <p>A Minor Project created by Ritwik Upadhyay, Sarvagya Singhal, Sachin Bagri, and Riya Palod.</p>
+    <hr>
+  </header>
+
+  <!-- MAIN GAME AREA -->
+  <div id="gameWrapper">
+
+    <!-- MAIN CANVAS: All gameplay (movement, bullets, collisions) happens here -->
+    <canvas id="gameCanvas" width="390" height="600"></canvas>
+
+    <!-- LIVE SCORE (updates in real-time on top of game screen) -->
+    <div id="liveScore">0</div>
+
+    <!-- PLAYER SHIP -->
+    <div class="player" id="player">
+      <img src="p_ship.png" alt="player">
+    </div>
+
+    <!-- ENEMY SHIP (single alien for now) -->
+    <div class="alien" id="alien">
+      <img src="e_ship.png" alt="alien">
+    </div>
+
+    <!-- TOUCH CONTROLS (Left, Shoot, Right) — positioned below canvas -->
+    <div id="controls">
+
+      <!-- LEFT BUTTON -->
+      <div class="left-area">
+        <button id="leftBtn"><img src="leftt.png" class="btnImg" alt="left"></button>
+      </div>
+
+      <!-- SHOOT BUTTON -->
+      <div class="center-area">
+        <button id="shootBtn" class="shoot">
+          <img src="shoot.png" class="btnImg" alt="shoot">
+        </button>
+      </div>
+
+      <!-- RIGHT BUTTON -->
+      <div class="right-area">
+        <button id="rightBtn"><img src="right.png" class="btnImg" alt="right"></button>
+      </div>
+
+    </div>
+
+    <!-- PAUSE + PLAY BUTTONS (top-right corner) -->
+    <div id="pauseControls">
+      <button id="pauseBtn"><img src="pause.png" class="pauseImg" alt="pause"></button>
+      <button id="playBtn"><img src="play.png" class="pauseImg" alt="play"></button>
+    </div>
+
+    <!-- COUNTDOWN OVERLAY BEFORE GAME START (3 → 2 → 1 → GO) -->
+    <div id="countdownScreen">
+      <h1 id="countdownText">3</h1>
+    </div>
+
+    <!-- PAUSE OVERLAY (big PLAY button in center when paused) -->
+    <div id="pauseOverlay" aria-hidden="true">
+      <button id="resumeBigBtn" aria-label="Resume game">PLAY</button>
+    </div>
+
+    <!-- GAME OVER MODAL -->
+    <div id="result">
+      <div class="content">
+        <!-- Final score -->
+        <p id="score">Score: 0</p>
+
+        <h1>Game Over</h1>
+
+        <!-- Restart button -->
+        <button id="btn">RESTART</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER SECTION -->
+  <footer>
+    <hr>
+
+    <!-- Documentation Button (PDF link to be attached later) -->
+    <button id="link">
+      <a href="">
+        Click here to access the Documentation for StarBlaze: A Retro Space War Game
+      </a>
+    </button>
+
+    <hr>
+
+    <!-- Copyright -->
+    <p class="copyright">
+      © 2025 StarBlaze | Built by Ritwik, Sarvagya, Sachin, and Riya.
+    </p>
+
+    <hr>
+  </footer>
+
+  <!-- BACKGROUND MUSIC (loops forever) -->
+  <audio id="bgMusic"
+         src="StarBlaze_Score.mp3"
+         loop preload="auto">
+  </audio>
+
+  <!-- MAIN SCRIPT -->
+  <script src="script.js"></script>
+
+</body>
+
+</html>
+

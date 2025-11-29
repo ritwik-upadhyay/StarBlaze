@@ -1,0 +1,330 @@
+/* Reset */
+*{margin:0;padding:0;box-sizing:border-box}
+
+/* Body */
+body{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  min-height:100vh;
+  background:#AEA893;
+  font-family:'Press Start 2P',monospace;
+  color:#000;
+  text-align:center;
+  /* base font scales with viewport but remains readable */
+  font-size:clamp(12px, 1.6vw, 18px);
+}
+
+hr {
+  margin: 10px;
+}
+
+p {
+  font-size: 16px;
+}
+
+p.copyright {
+  font-size: 7px;
+}
+/* wrapper */
+/* game container: responsive, preserves aspect ratio */
+#gameWrapper{
+  /* allow the game to grow on large screens but remain usable on small ones */
+  width: min(96vw, 900px);
+  aspect-ratio: 13 / 20; /* matches original 390x600 (≈0.65) */
+  position:relative;
+  border: clamp(3px, 0.6vw, 8px) dotted yellow;
+  overflow:hidden;
+  margin:2vh 0;
+  background:#000;
+  max-height:96vh;
+  display:block;
+}
+
+/* canvas fits */
+#gameCanvas{width:100%;height:100%;display:block}
+
+/* player - positioned relative to wrapper using percentages */
+.player{
+  position:absolute;
+  bottom:3%;
+  left:0; /* initial left will be set by script to a pixel value for consistent movement */
+  width:18%; /* scales with wrapper width */
+  max-width:140px;
+  z-index:20;
+}
+.player img{width:100%;height:auto;display:block}
+
+/* alien (single) */
+.alien{
+  position:absolute;
+  top:4%;
+  left:0;
+  z-index:15;
+  /* slightly larger enemy ship for better visibility */
+  width:22%;
+  max-width:180px;
+  text-align:center;
+}
+.alien img{ width: 100%; height:auto; display:block }
+
+/* bullet default (unused for dynamic bullets) */
+.bullet{ position:absolute }
+
+/* live score */
+/* live score - responsive sizing */
+#liveScore{
+  position:absolute;
+  top:1.2%;
+  right:2%;
+  font-size:clamp(14px,1.8vw,26px);
+  font-weight:bold;
+  color:yellow;
+  z-index:30;
+}
+
+/* countdown overlay */
+/* full-screen countdown overlay */
+#countdownScreen{
+  position:fixed; left:0; top:0; right:0; bottom:0; display:none; align-items:center; justify-content:center;
+  background:rgba(0,0,0,0.85); z-index:1000; font-family:'Press Start 2P'; color:#fff;
+  font-size:clamp(36px,8vw,120px);
+  padding:2vh;
+  box-sizing:border-box;
+}
+
+/* pause overlay that shows a large play button in the middle when paused */
+#pauseOverlay{
+  position:absolute;
+  left:0; top:0; right:0; bottom:0;
+  display:none; /* shown by JS when paused */
+  z-index:950;
+  align-items:center;
+  justify-content:center;
+  pointer-events:auto;
+}
+
+#pauseOverlay button#resumeBigBtn{
+  font-family:'Press Start 2P', monospace;
+  font-size:clamp(18px,6vw,48px);
+  color:yellow;
+  background:transparent;
+  border: 4px solid yellow;
+  padding: clamp(12px,3vw,28px) clamp(24px,6vw,56px);
+  border-radius:12px;
+  cursor:pointer;
+  text-transform:uppercase;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+}
+
+#pauseOverlay button#resumeBigBtn:active{ transform: translateY(2px) scale(0.98); }
+
+/* countdown text styling */
+#countdownText{
+  color:yellow;
+  text-shadow: 0 6px 18px rgba(0,0,0,0.65);
+  margin:0;
+  line-height:1;
+}
+
+/* controls (inside wrapper) */
+#controls{
+  position:absolute; left:0; right:0; bottom:2.5%; display:flex; justify-content:space-between;
+  align-items:center; padding:0 4%; z-index:120; pointer-events:none;
+}
+#controls .left-area, #controls .center-area, #controls .right-area{
+  display:flex; gap:12px; align-items:center; pointer-events:auto;
+}
+/* control buttons scale with container */
+#controls button{
+  background:rgba(0,0,0,0.35);
+  border:2px solid rgba(255,255,255,0.12);
+  width:clamp(48px,7.5vw,96px);
+  height:clamp(48px,7.5vw,96px);
+  border-radius:16px;
+  display:inline-flex; align-items:center; justify-content:center; box-shadow:0 6px 14px rgba(0,0,0,0.35); cursor: pointer;
+}
+#controls button:active{ transform:translateY(2px) scale(0.98) }
+.btnImg{ width:60%; height:60%; pointer-events:none; object-fit:contain }
+
+/* shoot button bigger */
+#shootBtn{ width:clamp(64px,10vw,120px); height:clamp(64px,10vw,120px); border-radius:24px; background:linear-gradient(180deg,#ff5050,#dc1414); border:0; box-shadow:0 8px 20px rgba(220,20,20,0.35) }
+
+/* pause/play top right */
+#pauseControls{ position:absolute; top:1.2%; left:2%; display:flex; gap:1.2vw; z-index:130; pointer-events:auto }
+#pauseBtn,#playBtn{ width:clamp(36px,5.2vw,60px); height:clamp(36px,5.2vw,60px); border-radius:10px; background:rgba(0,0,0,0.35); border:none; display:inline-flex; align-items:center; justify-content:center; cursor: pointer; }
+.pauseImg{ width:70%; height:70%; object-fit:contain }
+
+/* result modal - full-screen overlay */
+#result{
+  position:fixed;
+  left:0;
+  top:0;
+  right:0;
+  bottom:0;
+  display:none;
+  z-index:1005;
+  background:rgba(0,0,0,0.85);
+  font-family:'Press Start 2P',monospace;
+  color:yellow;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:2vh;
+  box-sizing:border-box;
+}
+
+#result .content{
+  /* center via absolute positioning to avoid any ancestor transform or layout from
+     changing how fixed/flex behave — this guarantees center-middle placement */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: min(92%, clamp(260px,60vw,720px));
+  max-width:720px;
+  background: rgba(0,0,0,0.55);
+  border-radius: 12px;
+  padding: clamp(12px,3vw,28px);
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap: clamp(12px,2.2vw,18px);
+
+  /* allow internal scrolling for very short viewports while keeping the box centered */
+  max-height: 90vh;
+  overflow: auto;
+}
+#result h1{ margin:0; color:yellow; font-size:clamp(18px,4vw,36px); }
+#result #score{ font-size:clamp(22px,6vw,48px); font-weight:bold; color:yellow; margin:0 }
+#btn{ padding:.6rem 1rem; border-radius:16px; border:none; background:#000; color:yellow; font-size:clamp(14px,3vw,22px); cursor:pointer; font-family:'Press Start 2P',monospace; }
+#btn:active{ transform:translateY(2px) }
+/* canvas fits */
+#gameCanvas{width:100%;height:100%;display:block}
+
+/* player - positioned relative to wrapper using percentages */
+.player{
+  position:absolute;
+  bottom:3%;
+  left:0; /* initial left will be set by script to a pixel value for consistent movement */
+  width:18%; /* scales with wrapper width */
+  max-width:140px;
+  z-index:20;
+}
+.player img{width:100%;height:auto;display:block}
+
+/* alien (single) */
+.alien{
+  position:absolute;
+  top:4%;
+  left:0;
+  z-index:15;
+  /* slightly larger enemy ship for better visibility */
+  width:22%;
+  max-width:180px;
+  text-align:center;
+}
+.alien img{ width: 100%; height:auto; display:block }
+
+/* bullet default (unused for dynamic bullets) */
+.bullet{ position:absolute }
+
+/* live score */
+/* live score - responsive sizing */
+#liveScore{
+  position:absolute;
+  top:1.2%;
+  right:2%;
+  font-size:clamp(14px,1.8vw,26px);
+  font-weight:bold;
+  color:yellow;
+  z-index:30;
+}
+
+/* countdown overlay */
+/* full-screen countdown overlay */
+#countdownScreen{
+  position:fixed; left:0; top:0; right:0; bottom:0; display:none; align-items:center; justify-content:center;
+  background:rgba(0,0,0,0.85); z-index:1000; font-family:'Press Start 2P'; color:#fff;
+  font-size:clamp(36px,8vw,120px);
+  padding:2vh;
+  box-sizing:border-box;
+}
+
+/* countdown text styling */
+#countdownText{
+  color:yellow;
+  text-shadow: 0 6px 18px rgba(0,0,0,0.65);
+  margin:0;
+  line-height:1;
+}
+
+/* controls (inside wrapper) */
+#controls{
+  position:absolute; left:0; right:0; bottom:2.5%; display:flex; justify-content:space-between;
+  align-items:center; padding:0 4%; z-index:120; pointer-events:none;
+}
+#controls .left-area, #controls .center-area, #controls .right-area{
+  display:flex; gap:12px; align-items:center; pointer-events:auto;
+}
+/* control buttons scale with container */
+#controls button{
+  background:rgba(0,0,0,0.35);
+  border:2px solid rgba(255,255,255,0.12);
+  width:clamp(48px,7.5vw,96px);
+  height:clamp(48px,7.5vw,96px);
+  border-radius:16px;
+  display:inline-flex; align-items:center; justify-content:center; box-shadow:0 6px 14px rgba(0,0,0,0.35); cursor: pointer;
+}
+#controls button:active{ transform:translateY(2px) scale(0.98) }
+.btnImg{ width:60%; height:60%; pointer-events:none; object-fit:contain }
+
+/* shoot button bigger */
+#shootBtn{ width:clamp(64px,10vw,120px); height:clamp(64px,10vw,120px); border-radius:24px; background:linear-gradient(180deg,#ff5050,#dc1414); border:0; box-shadow:0 8px 20px rgba(220,20,20,0.35) }
+
+/* pause/play top right */
+#pauseControls{ position:absolute; top:1.2%; left:2%; display:flex; gap:1.2vw; z-index:130; pointer-events:auto }
+#pauseBtn,#playBtn{ width:clamp(36px,5.2vw,60px); height:clamp(36px,5.2vw,60px); border-radius:10px; background:rgba(0,0,0,0.35); border:none; display:inline-flex; align-items:center; justify-content:center; cursor: pointer; }
+.pauseImg{ width:70%; height:70%; object-fit:contain }
+
+#link {
+  padding: 5px;
+  background-color: transparent;
+
+}
+
+#link:hover {
+  background: black;
+  border: 1px solid black;
+}
+
+a {
+  color: black;
+  font-family:'Press Start 2P',monospace;
+  font-size: 13px;
+
+}
+
+a:hover {
+  color: #AEA893;
+}
+
+/* responsive */
+/* small tweaks for very narrow viewports */
+@media (max-width:420px){
+  #gameWrapper{ width: min(98vw, 420px); }
+  .player{ width:22%; }
+}
+
+/* landscape phones / small tablets - allow more horizontal space */
+@media (min-width:421px) and (max-width:900px){
+  #gameWrapper{ width: min(92vw, 700px); }
+}
+
+/* large screens: provide a pleasant max width so UI doesn't become huge */
+@media (min-width:901px){
+  #gameWrapper{ width: min(60vw, 900px); }
+}
+
